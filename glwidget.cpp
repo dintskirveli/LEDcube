@@ -147,7 +147,6 @@ void GLWidget::setZRotation(int angle)
     }
 }
 
-
 void GLWidget::setZoom(int newZ) {
     zoom = cubeSize - newZ*cubeSize/360;
     resizeGL(width(), height());
@@ -156,31 +155,21 @@ void GLWidget::setZoom(int newZ) {
 
 void GLWidget::resizeGL(int w, int h)
 {
-    double Aspect;
-    
-    // Prevent a divide by zero, when window is too short
-    // (you cant make a window of zero width)
-    if(h == 0)
-        h = 1;
-    
-    // Set the viewport to be the entire window
+    if(w == 0) w = 1;
+    if(h == 0) h = 1;
+
+    double aspect =(double)w/(double)h;
+
     glViewport(0, 0, w, h);
-    
-    
-    Aspect=(double)w/(double)h;
-    
-    //Reset projection matrix stack
+
     glMatrixMode(GL_PROJECTION);
-    // Reset the coordinate system before modifying
     glLoadIdentity();
     
     
-    double Range = zoom;
-    
     if (w <= h)
-        glOrtho(-(Range),Range,-Range/Aspect,Range/Aspect,-(Range*2),cubeSize*2);
+        glOrtho(-zoom, zoom,-zoom/aspect,zoom/aspect,-(zoom*2),cubeSize*2);
     else
-        glOrtho(-(Range*Aspect),Range*Aspect,-Range,Range,-(Range*2),cubeSize*2);
+        glOrtho(-(zoom*aspect),zoom*aspect,-zoom,zoom,-(zoom*2),cubeSize*2);
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
