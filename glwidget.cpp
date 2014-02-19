@@ -77,35 +77,35 @@ void GLWidget::drawCube(float size, float dx, float dy, float dz, bool on) {
     
     glColor4f(1.0f, 1.0f, 1.0f, alpha);
     
-    glVertex3f(size+dx, size+dy, 0.0f+dz);
-    glVertex3f(0.0f+dx, size+dy, 0.0f+dz);
-    glVertex3f(0.0f+dx, size+dy, size+dz);
+    glVertex3f(size+dx, size+dy, dz);
+    glVertex3f(dx, size+dy, dz);
+    glVertex3f(dx, size+dy, size+dz);
     glVertex3f(size+dx, size+dy, size+dz);
     
-    glVertex3f(size+dx, 0.0f+dy, size+dz);
-    glVertex3f(0.0f+dx, 0.0f+dy, size+dz);
-    glVertex3f(0.0f+dx, 0.0f+dy, 0.0f+dz);
-    glVertex3f(size+dx, 0.0f+dy, 0.0f+dz);
+    glVertex3f(size+dx, dy, size+dz);
+    glVertex3f(dx, dy, size+dz);
+    glVertex3f(dx, dy, dz);
+    glVertex3f(size+dx, dy, dz);
     
     glVertex3f(size+dx, size+dy, size+dz);
-    glVertex3f(0.0f+dx, size+dy, size+dz);
-    glVertex3f(0.0f+dx, 0.0f+dy, size+dz);
-    glVertex3f(size+dx, 0.0f+dy, size+dz);
+    glVertex3f(dx, size+dy, size+dz);
+    glVertex3f(dx, dy, size+dz);
+    glVertex3f(size+dx, dy, size+dz);
     
-    glVertex3f(size+dx, 0.0f+dy, 0.0f+dz);
-    glVertex3f(0.0f+dx, 0.0f+dy, 0.0f+dz);
-    glVertex3f(0.0f+dx, size+dy, 0.0f+dz);
-    glVertex3f(size+dx, size+dy, 0.0f+dz);
+    glVertex3f(size+dx, dy, dz);
+    glVertex3f(dx, dy, dz);
+    glVertex3f(dx, size+dy, dz);
+    glVertex3f(size+dx, size+dy, dz);
     
-    glVertex3f(0.0f+dx, size+dy, size+dz);
-    glVertex3f(0.0f+dx, size+dy, 0.0f+dz);
-    glVertex3f(0.0f+dx, 0.0f+dy, 0.0f+dz);
-    glVertex3f(0.0f+dx, 0.0f+dy, size+dz);
+    glVertex3f(dx, size+dy, size+dz);
+    glVertex3f(dx, size+dy, dz);
+    glVertex3f(dx, dy, dz);
+    glVertex3f(dx, dy, size+dz);
     
-    glVertex3f(size+dx, size+dy, 0.0f+dz);
+    glVertex3f(size+dx, size+dy, dz);
     glVertex3f(size+dx, size+dy, size+dz);
-    glVertex3f(size+dx, 0.0f+dy, size+dz);
-    glVertex3f(size+dx, 0.0f+dy, 0.0f+dz);
+    glVertex3f(size+dx, dy, size+dz);
+    glVertex3f(size+dx, dy, +dz);
     
     glEnd();
 }
