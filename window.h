@@ -7,7 +7,7 @@ QT_BEGIN_NAMESPACE
 class QSlider;
 QT_END_NAMESPACE
 
-class GLWidget;
+class MatrixWidget;
 
 class Window : public QWidget
 {
@@ -21,7 +21,7 @@ protected:
 
 private:
     QSlider *createSlider(int range = 360, int singleStep = 1, int pageStep = 20, int tickInterval = 20);
-    GLWidget *glWidget;
+    MatrixWidget *matrixWidget;
     QSlider *xSlider;
     QSlider *ySlider;
     QSlider *zSlider;

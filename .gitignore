@@ -7,3 +7,7 @@ moc_glwidget.o
 moc_window.cpp
 moc_window.o
 window.o
+matrixwidget.o
+moc_matrixwidget.cpp
+moc_matrixwidget.o
+LEDcube.app/*

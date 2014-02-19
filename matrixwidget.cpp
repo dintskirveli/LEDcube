@@ -1,22 +1,22 @@
-#include "glwidget.h"
+#include "matrixwidget.h"
 #include <QtOpenGL>
  
-GLWidget::GLWidget(QWidget *parent) :
-    QGLWidget(parent)
+MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
 {
+    
 }
 
-QSize GLWidget::minimumSizeHint() const
+QSize MatrixWidget::minimumSizeHint() const
 {
     return QSize(200, 200);
 }
 
-QSize GLWidget::sizeHint() const
+QSize MatrixWidget::sizeHint() const
 {
     return QSize(400, 400);
 }
  
-void GLWidget::initializeGL()
+void MatrixWidget::initializeGL()
 {
     glClearColor(0,0,0,0);
     glEnable(GL_DEPTH_TEST);
@@ -34,11 +34,11 @@ void GLWidget::initializeGL()
     zoom = cubeSize;
 }
 
-float GLWidget::coords(int index) {
+float MatrixWidget::coords(int index) {
     return index*ledSize+spacing*index-cubeSize/2;
 }
 
-void GLWidget::paintGL()
+void MatrixWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -65,7 +65,7 @@ void GLWidget::paintGL()
     }
 }
 
-void GLWidget::drawCube(float size, float dx, float dy, float dz, bool on) 
+void MatrixWidget::drawCube(float size, float dx, float dy, float dz, bool on) 
 {
     float alpha;
     if (on) {
@@ -117,7 +117,7 @@ static void qNormalizeAngle(int &angle)
     while (angle > 360) angle -= 360;
 }
 
-void GLWidget::setXRotation(int angle)
+void MatrixWidget::setXRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != xRot) {
@@ -127,7 +127,7 @@ void GLWidget::setXRotation(int angle)
     }
 }
 
-void GLWidget::setYRotation(int angle)
+void MatrixWidget::setYRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != yRot) {
@@ -137,7 +137,7 @@ void GLWidget::setYRotation(int angle)
     }
 }
 
-void GLWidget::setZRotation(int angle)
+void MatrixWidget::setZRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != zRot) {
@@ -147,13 +147,13 @@ void GLWidget::setZRotation(int angle)
     }
 }
 
-void GLWidget::setZoom(int newZ) {
+void MatrixWidget::setZoom(int newZ) {
     zoom = cubeSize - newZ*cubeSize/360;
     resizeGL(width(), height());
     updateGL();
 }
 
-void GLWidget::resizeGL(int w, int h)
+void MatrixWidget::resizeGL(int w, int h)
 {
     if(w == 0) w = 1;
     if(h == 0) h = 1;
@@ -175,12 +175,12 @@ void GLWidget::resizeGL(int w, int h)
     glLoadIdentity();
 }
 
-void GLWidget::mousePressEvent(QMouseEvent *event)
+void MatrixWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
 }
 
-void GLWidget::mouseMoveEvent(QMouseEvent *event)
+void MatrixWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int dx = event->x() - lastPos.x();
     int dy = event->y() - lastPos.y();

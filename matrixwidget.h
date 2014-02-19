@@ -5,12 +5,12 @@
 
 class QtLogo;
 
-class GLWidget : public QGLWidget
+class MatrixWidget : public QGLWidget
 {
     Q_OBJECT
 
 public:
-    GLWidget(QWidget *parent = 0);
+    MatrixWidget(QWidget *parent = 0);
 
 public slots:
     void setXRotation(int angle);

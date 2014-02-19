@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <QDesktopWidget>
-#include "glwidget.h"
+#include "matrixwidget.h"
 
 #include "window.h"
 

@@ -8,5 +8,5 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += glwidget.h window.h
-SOURCES += glwidget.cpp main.cpp window.cpp
+HEADERS += matrixwidget.h window.h
+SOURCES += matrixwidget.cpp main.cpp window.cpp
