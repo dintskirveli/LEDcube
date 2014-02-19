@@ -33,6 +33,7 @@ protected:
     float coords(int index);
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
+
 private:
     int xRot;
     int yRot;
@@ -42,7 +43,7 @@ private:
     int numCubes;
     float ledSize;
     float cubeSize;
-    int zoom;
+    float zoom;
 };
 
 #endif
