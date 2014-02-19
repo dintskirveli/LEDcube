@@ -30,7 +30,9 @@ protected:
     void resizeGL(int width, int height);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
-    float coords(int index);
+    float xCoords(int index);
+    float yCoords(int index);
+    float zCoords(int index);
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
@@ -40,9 +42,13 @@ private:
     int zRot;
     QPoint lastPos;
     float spacing;
-    int numCubes;
+    int xCubes;
+    int yCubes;
+    int zCubes;
     float ledSize;
-    float cubeSize;
+    float xCubeSize;
+    float yCubeSize;
+    float zCubeSize;
     float zoom;
 };
 
