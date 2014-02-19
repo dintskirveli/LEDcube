@@ -1,0 +1,9 @@
+LEDcube
+Makefile
+glwidget.o
+main.o
+moc_glwidget.cpp
+moc_glwidget.o
+moc_window.cpp
+moc_window.o
+window.o
