@@ -3,7 +3,6 @@
 #include "matrixwidget.h"
 #include "window.h"
 
-//! [0]
 Window::Window()
 {
     matrixWidget = new MatrixWidget;
@@ -12,6 +11,10 @@ Window::Window()
     ySlider = createSlider();
     zSlider = createSlider();
     zoomSlider = createSlider();
+
+    xSize = createSpinBox();
+    ySize = createSpinBox();
+    zSize = createSpinBox();
 
     connect(xSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXRotation(int)));
     connect(matrixWidget, SIGNAL(xRotationChanged(int)), xSlider, SLOT(setValue(int)));
@@ -22,12 +25,21 @@ Window::Window()
 
     connect(zoomSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZoom(int)));
 
+    connect(xSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXSize(int)));
+    connect(ySize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYSize(int)));   
+    connect(zSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZSize(int)));     
+
     QHBoxLayout *mainLayout = new QHBoxLayout;
     mainLayout->addWidget(matrixWidget);
     mainLayout->addWidget(xSlider);
     mainLayout->addWidget(ySlider);
     mainLayout->addWidget(zSlider);
     mainLayout->addWidget(zoomSlider);
+
+    mainLayout->addWidget(xSize);
+    mainLayout->addWidget(ySize);
+    mainLayout->addWidget(zSize);
+
     setLayout(mainLayout);
 
     xSlider->setValue(0);
@@ -46,6 +58,14 @@ QSlider *Window::createSlider(int range, int singleStep, int pageStep, int tickI
     slider->setTickInterval(tickInterval);
     slider->setTickPosition(QSlider::TicksRight);
     return slider;
+}
+
+QSpinBox *Window::createSpinBox()
+{
+    QSpinBox *spin = new QSpinBox();
+    spin->setRange(0, 50);
+    spin->setValue(20);
+    return spin;
 }
 
 void Window::keyPressEvent(QKeyEvent *e)

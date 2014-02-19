@@ -17,6 +17,9 @@ public slots:
     void setYRotation(int angle);
     void setZRotation(int angle);
     void setZoom(int zoom);
+    void setXSize(int size);
+    void setYSize(int size);
+    void setZSize(int size);
     
 signals:
     void xRotationChanged(int angle);
@@ -35,6 +38,7 @@ protected:
     float zCoords(int index);
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
+    void calcCubeSize();
 
 private:
     int xRot;

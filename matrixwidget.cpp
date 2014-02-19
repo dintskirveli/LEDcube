@@ -32,10 +32,15 @@ void MatrixWidget::initializeGL()
     spacing = 0.5f;
     ledSize = 0.2f;
     
+    calcCubeSize();
+
+    zoom = xCubeSize;
+}
+
+void MatrixWidget::calcCubeSize() {
     xCubeSize = (ledSize*xCubes+spacing*xCubes);
     yCubeSize = (ledSize*yCubes+spacing*yCubes);
     zCubeSize = (ledSize*zCubes+spacing*zCubes);
-    zoom = xCubeSize;
 }
 
 float MatrixWidget::xCoords(int index) {
@@ -159,6 +164,24 @@ void MatrixWidget::setZoom(int newZ) {
     updateGL();
 }
 
+void MatrixWidget::setXSize(int size) {
+    xCubes = size;
+    calcCubeSize();
+    updateGL();
+}
+
+void MatrixWidget::setYSize(int size) {
+    yCubes = size;
+    calcCubeSize();
+    updateGL();
+}
+
+void MatrixWidget::setZSize(int size) {
+    zCubes = size;
+    calcCubeSize();
+    updateGL();
+}
+
 void MatrixWidget::resizeGL(int w, int h)
 {
     if(w == 0) w = 1;
@@ -192,11 +215,11 @@ void MatrixWidget::mouseMoveEvent(QMouseEvent *event)
     int dy = event->y() - lastPos.y();
     
     if (event->buttons() & Qt::LeftButton) {
-        setXRotation(xRot + dy);
-        setYRotation(yRot + dx);
+        setXRotation(xRot - dy);
+        setYRotation(yRot - dx);
     } else if (event->buttons() & Qt::RightButton) {
-        setXRotation(xRot + dy);
-        setZRotation(zRot + dx);
+        setXRotation(xRot - dy);
+        setZRotation(zRot - dx);
     }
     lastPos = event->pos();
 }
