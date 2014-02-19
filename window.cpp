@@ -11,7 +11,6 @@ Window::Window()
     xSlider = createSlider();
     ySlider = createSlider();
     zSlider = createSlider();
-    
     zoomSlider = createSlider();
 
     connect(xSlider, SIGNAL(valueChanged(int)), glWidget, SLOT(setXRotation(int)));
@@ -20,7 +19,7 @@ Window::Window()
     connect(glWidget, SIGNAL(yRotationChanged(int)), ySlider, SLOT(setValue(int)));
     connect(zSlider, SIGNAL(valueChanged(int)), glWidget, SLOT(setZRotation(int)));
     connect(glWidget, SIGNAL(zRotationChanged(int)), zSlider, SLOT(setValue(int)));
-    
+
     connect(zoomSlider, SIGNAL(valueChanged(int)), glWidget, SLOT(setZoom(int)));
 
     QHBoxLayout *mainLayout = new QHBoxLayout;
@@ -38,13 +37,13 @@ Window::Window()
     setWindowTitle(tr("LEDcube"));
 }
 
-QSlider *Window::createSlider()
+QSlider *Window::createSlider(int range, int singleStep, int pageStep, int tickInterval)
 {
     QSlider *slider = new QSlider(Qt::Vertical);
-    slider->setRange(0, 360);
-    slider->setSingleStep(1);
-    slider->setPageStep(20);
-    slider->setTickInterval(20);
+    slider->setRange(0, range);
+    slider->setSingleStep(singleStep);
+    slider->setPageStep(pageStep); 
+    slider->setTickInterval(tickInterval);
     slider->setTickPosition(QSlider::TicksRight);
     return slider;
 }

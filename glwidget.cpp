@@ -65,7 +65,8 @@ void GLWidget::paintGL()
     }
 }
 
-void GLWidget::drawCube(float size, float dx, float dy, float dz, bool on) {
+void GLWidget::drawCube(float size, float dx, float dy, float dz, bool on) 
+{
     float alpha;
     if (on) {
         alpha = 1.0;
