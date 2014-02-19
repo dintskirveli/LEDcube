@@ -160,7 +160,7 @@ void GLWidget::resizeGL(int w, int h)
     
     // Prevent a divide by zero, when window is too short
     // (you cant make a window of zero width)
-    if(h == 0)//altura
+    if(h == 0)
         h = 1;
     
     // Set the viewport to be the entire window
