@@ -21,7 +21,7 @@ protected:
     void keyPressEvent(QKeyEvent *event);
 
 private:
-    QSlider *createSlider(int min = 0, int range = 360, int singleStep = 1, int pageStep = 20, int tickInterval = 20);
+    QSlider *createSlider(int min = 0, int max = 360, int singleStep = 1, int pageStep = 20, int tickInterval = 20);
     QSpinBox* createSpinBox();
     MatrixWidget *matrixWidget;
     QSlider *xSlider;

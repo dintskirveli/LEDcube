@@ -83,6 +83,7 @@ QSpinBox *Window::createSpinBox()
 {
     QSpinBox *spin = new QSpinBox();
     spin->setRange(0, 50);
+    spin->setMaximumWidth(50);
     return spin;
 }
 
