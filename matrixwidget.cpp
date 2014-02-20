@@ -64,8 +64,8 @@ float MatrixWidget::zCoords(int index) {
 }
 
 bool MatrixWidget::isOn(int x, int y, int z) {
-    double extent = yCubes/2.0;
-    int yval = round((double)sin(x*3.14*2/extent)*(double)extent + extent);
+    double extent = yCubes/4.0;
+    int yval = round((double)sin(x*3.14/extent)*(double)extent + extent*2);
     if(y == yval) {
         return true;
     }

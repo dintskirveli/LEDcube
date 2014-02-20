@@ -54,7 +54,9 @@ Window::Window()
 
     mainLayout->addWidget(zoomSlider);
 
-    setLayout(mainLayout);
+    QWidget *central = new QWidget();
+    central->setLayout(mainLayout);
+    setCentralWidget(central);
 
     xSlider->setValue(0);
     ySlider->setValue(0);

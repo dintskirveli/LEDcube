@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <QWidget>
+#include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 class QSlider;
@@ -10,7 +10,7 @@ QT_END_NAMESPACE
 
 class MatrixWidget;
 
-class Window : public QWidget
+class Window : public QMainWindow
 {
     Q_OBJECT
 
