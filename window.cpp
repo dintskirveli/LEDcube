@@ -6,11 +6,12 @@
 Window::Window()
 {
     matrixWidget = new MatrixWidget;
+    QSettings *settings = new QSettings("groupname", "LEDcube");
 
     xSlider = createSlider();
     ySlider = createSlider();
     zSlider = createSlider();
-    zoomSlider = createSlider();
+    zoomSlider = createSlider(-360); //make min = 360
 
     xSize = createSpinBox();
     ySize = createSpinBox();
@@ -31,28 +32,46 @@ Window::Window()
 
     QHBoxLayout *mainLayout = new QHBoxLayout;
     mainLayout->addWidget(matrixWidget);
-    mainLayout->addWidget(xSlider);
-    mainLayout->addWidget(ySlider);
-    mainLayout->addWidget(zSlider);
-    mainLayout->addWidget(zoomSlider);
+    
+    QVBoxLayout *xLayout = new QVBoxLayout;
 
-    mainLayout->addWidget(xSize);
-    mainLayout->addWidget(ySize);
-    mainLayout->addWidget(zSize);
+    xLayout->addWidget(xSlider);
+    xLayout->addWidget(xSize);
+
+    QVBoxLayout *yLayout = new QVBoxLayout;
+
+    yLayout->addWidget(ySlider);
+    yLayout->addWidget(ySize);
+
+    QVBoxLayout *zLayout = new QVBoxLayout;
+
+    zLayout->addWidget(zSlider);
+    zLayout->addWidget(zSize);
+
+    mainLayout->addLayout(xLayout);
+    mainLayout->addLayout(yLayout);
+    mainLayout->addLayout(zLayout);
+
+    mainLayout->addWidget(zoomSlider);
 
     setLayout(mainLayout);
 
     xSlider->setValue(0);
     ySlider->setValue(0);
     zSlider->setValue(0);
+
+    xSize->setValue(settings->value("xSize", 20).toInt());
+    ySize->setValue(settings->value("ySize", 20).toInt());
+    zSize->setValue(settings->value("zSize", 20).toInt());
+
     zoomSlider->setValue(0);
     setWindowTitle(tr("LEDcube"));
 }
 
-QSlider *Window::createSlider(int range, int singleStep, int pageStep, int tickInterval)
+QSlider *Window::createSlider(int min, int max, int singleStep, int pageStep, int tickInterval)
 {
     QSlider *slider = new QSlider(Qt::Vertical);
-    slider->setRange(0, range);
+    slider->setRange(min, max);
     slider->setSingleStep(singleStep);
     slider->setPageStep(pageStep); 
     slider->setTickInterval(tickInterval);
@@ -64,7 +83,6 @@ QSpinBox *Window::createSpinBox()
 {
     QSpinBox *spin = new QSpinBox();
     spin->setRange(0, 50);
-    spin->setValue(20);
     return spin;
 }
 

@@ -1,9 +1,8 @@
-#ifndef GLWIDGET_H
-#define GLWIDGET_H
+#ifndef MATRIXWIDGET_H
+#define MATRIXWIDGET_H
 
 #include <QGLWidget>
-
-class QtLogo;
+#include <QSettings>
 
 class MatrixWidget : public QGLWidget
 {
@@ -27,7 +26,7 @@ signals:
     void zRotationChanged(int angle);
 
 protected:
-    void drawCube(float size, float dx, float dy, float dz, bool on);
+    void drawCube(int x, int y, int z);
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
@@ -39,6 +38,7 @@ protected:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
     void calcCubeSize();
+    bool isOn(int x, int y, int z);
 
 private:
     int xRot;
@@ -54,6 +54,7 @@ private:
     float yCubeSize;
     float zCubeSize;
     float zoom;
+    QSettings * settings;
 };
 
 #endif

@@ -1,9 +1,17 @@
 #include "matrixwidget.h"
 #include <QtOpenGL>
+#include <cmath>
  
 MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
 {
-
+    settings = new QSettings("groupname", "LEDcube");
+    xRot = yRot = zRot = 0;
+    spacing = 0.5f;
+    ledSize = 0.2f;
+    xCubes = settings->value("xSize", 20).toInt();
+    yCubes = settings->value("ySize", 20).toInt();
+    zCubes = settings->value("zSize", 20).toInt();
+    calcCubeSize();
 }
 
 QSize MatrixWidget::minimumSizeHint() const
@@ -23,24 +31,24 @@ void MatrixWidget::initializeGL()
     
     glEnable( GL_BLEND );
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   
-    xRot = yRot = zRot = 0;    
- 
-    
-    xCubes = yCubes = zCubes = 20;
+}
 
-    spacing = 0.5f;
-    ledSize = 0.2f;
-    
-    calcCubeSize();
-
-    zoom = xCubeSize;
+static float maximum(float x, float y, float z) {
+    int max = x; 
+    if (y > max) {
+        max = y;
+    } else if (z > max) {
+        max = z;
+    }
+    return max;
 }
 
 void MatrixWidget::calcCubeSize() {
-    xCubeSize = (ledSize*xCubes+spacing*xCubes);
-    yCubeSize = (ledSize*yCubes+spacing*yCubes);
-    zCubeSize = (ledSize*zCubes+spacing*zCubes);
+    xCubeSize = (ledSize*xCubes+spacing*(xCubes-1));
+    yCubeSize = (ledSize*yCubes+spacing*(yCubes-1));
+    zCubeSize = (ledSize*zCubes+spacing*(zCubes-1));
+    
+    zoom = maximum(xCubeSize, yCubeSize, zCubeSize);
 }
 
 float MatrixWidget::xCoords(int index) {
@@ -55,6 +63,15 @@ float MatrixWidget::zCoords(int index) {
     return index*ledSize+spacing*index-zCubeSize/2;
 }
 
+bool MatrixWidget::isOn(int x, int y, int z) {
+    double extent = yCubes/2.0;
+    int yval = round((double)sin(x*3.14*2/extent)*(double)extent + extent);
+    if(y == yval) {
+        return true;
+    }
+    return false;
+}
+
 void MatrixWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -63,23 +80,25 @@ void MatrixWidget::paintGL()
     glRotatef(xRot,1.0f,0.0f,0.0f);
     glRotatef(yRot,0.0f,1.0f,0.0f);
     glRotatef(zRot,0.0f,0.0f,1.0f);
-   
-    bool on = false;
     
     for (float i = 0; i < xCubes; i++) {
         for (float j = 0; j < yCubes; j++) {
             for (float k = 0; k < zCubes; k++) {
-                drawCube(ledSize, xCoords(i), yCoords(j), zCoords(k), (i == j && j == k ));    
+                drawCube(i,j,k);    
             }
         }
     
     }
 }
 
-void MatrixWidget::drawCube(float size, float dx, float dy, float dz, bool on) 
+void MatrixWidget::drawCube(int x, int y, int z) 
 {
+    float dx = xCoords(x);
+    float dy = yCoords(y);
+    float dz = zCoords(z);
+
     float alpha;
-    if (on) {
+    if (isOn(x,y,z)) {
         alpha = 1.0;
     } else {
         alpha = 0.1;
@@ -88,6 +107,8 @@ void MatrixWidget::drawCube(float size, float dx, float dy, float dz, bool on)
     glBegin(GL_QUADS);
     
     glColor4f(1.0f, 1.0f, 1.0f, alpha);
+
+    float size = ledSize;
     
     glVertex3f(size+dx, size+dy, dz);
     glVertex3f(dx, size+dy, dz);
@@ -158,27 +179,35 @@ void MatrixWidget::setZRotation(int angle)
     }
 }
 
-void MatrixWidget::setZoom(int newZ) {
-    zoom = xCubeSize - newZ*xCubeSize/360;
+void MatrixWidget::setZoom(int newZoom) {
+    float cubeSize = maximum(xCubeSize, yCubeSize, zCubeSize);
+    if (newZoom == 360) newZoom = 359; 
+    zoom = cubeSize - newZoom*cubeSize/360;
     resizeGL(width(), height());
     updateGL();
 }
 
 void MatrixWidget::setXSize(int size) {
     xCubes = size;
+    settings->setValue("xSize", xCubes);
     calcCubeSize();
+    resizeGL(width(), height());
     updateGL();
 }
 
 void MatrixWidget::setYSize(int size) {
     yCubes = size;
+    settings->setValue("ySize", yCubes);
     calcCubeSize();
+    resizeGL(width(), height());
     updateGL();
 }
 
 void MatrixWidget::setZSize(int size) {
     zCubes = size;
+    settings->setValue("zSize", zCubes);
     calcCubeSize();
+    resizeGL(width(), height());
     updateGL();
 }
 
@@ -187,18 +216,17 @@ void MatrixWidget::resizeGL(int w, int h)
     if(w == 0) w = 1;
     if(h == 0) h = 1;
 
-    double aspect =(double)w/(double)h;
+    float aspect =(float)w/h;
 
     glViewport(0, 0, w, h);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    
-    
+
     if (w <= h)
-        glOrtho(-zoom, zoom,-zoom/aspect,zoom/aspect,-(zoom*2),xCubeSize*2);
+        glOrtho(-zoom, zoom,-zoom/aspect,zoom/aspect,-(zoom*2),zoom*2);
     else
-        glOrtho(-(zoom*aspect),zoom*aspect,-zoom,zoom,-(zoom*2),xCubeSize*2);
+        glOrtho(-(zoom*aspect),zoom*aspect,-zoom,zoom,-(zoom*2),zoom*2);
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
