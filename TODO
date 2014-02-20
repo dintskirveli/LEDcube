@@ -5,3 +5,4 @@ add checkbox to decide whether or not to draw "off" LEDs at all
 add checkbox to decide whether to cube shape a cube (so you dont have to change all settings at once)
 add slider to set led size (if draw mode is MODE_CUBES)
 add slider to set spacing between LEDs
+use double buffering
