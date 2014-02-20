@@ -14,8 +14,10 @@ class MatrixWidget : public QGLWidget
     Q_OBJECT
 
 public:
-
     MatrixWidget(QWidget *parent = 0);
+    enum { MODE_CUBES, MODE_POINTS };
+    //decides whether or not to draw the leds that are off
+    bool DRAW_OFF_LEDS_AS_TRANSLUSCENT;
 
 public slots:
     void setXRotation(int angle);
@@ -33,6 +35,7 @@ signals:
 
 protected:
     void drawCube(int x, int y, int z);
+    void drawPoint(int x, int y, int z); 
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
@@ -48,6 +51,7 @@ protected:
     void perspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar);
 
 private:
+    int mode;
     int xRot;
     int yRot;
     int zRot;

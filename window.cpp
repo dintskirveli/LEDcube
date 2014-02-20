@@ -8,6 +8,8 @@ Window::Window()
     matrixWidget = new MatrixWidget;
     QSettings *settings = new QSettings("groupname", "LEDcube");
 
+    drawMode = settings->value("drawMode", MatrixWidget::MODE_POINTS).toInt();
+
     xSlider = createSlider();
     ySlider = createSlider();
     zSlider = createSlider();
@@ -83,8 +85,14 @@ QSlider *Window::createSlider(int min, int max, int singleStep, int pageStep, in
 
 QSpinBox *Window::createSpinBox()
 {
+    int max;
+    if (drawMode ==  MatrixWidget::MODE_POINTS) {
+        max = 100;
+    } else {
+        max = 50;
+    }
     QSpinBox *spin = new QSpinBox();
-    spin->setRange(0, 50);
+    spin->setRange(0, max);
     spin->setMaximumWidth(50);
     return spin;
 }

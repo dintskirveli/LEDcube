@@ -33,10 +33,10 @@ private:
     QSlider *ySlider;
     QSlider *zSlider;
     QSlider* zoomSlider;
-
     QSpinBox* xSize;
     QSpinBox* ySize;
     QSpinBox* zSize;
+    int drawMode;
 };
 
 #endif

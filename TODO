@@ -1,3 +1,7 @@
 Use perspective instead of orthographic projection
-Cubes are only transparent from one side
-Doxygen
+Doxygen (already WIP)
+add settings to choose draw mode, points or cubes (dropdown menu)
+add checkbox to decide whether or not to draw "off" LEDs at all
+add checkbox to decide whether to cube shape a cube (so you dont have to change all settings at once)
+add slider to set led size (if draw mode is MODE_CUBES)
+add slider to set spacing between LEDs

@@ -5,9 +5,17 @@
 MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
 {
     settings = new QSettings("groupname", "LEDcube");
+    mode = MODE_POINTS;
     xRot = yRot = zRot = 0;
+    if (mode == MODE_POINTS) {
+        ledSize = 0.0f;
+    } else if (mode == MODE_CUBES) {
+        ledSize = 0.2f;
+    }
     spacing = 0.5f;
-    ledSize = 0.2f;
+
+    DRAW_OFF_LEDS_AS_TRANSLUSCENT = false;
+    
     xCubes = settings->value("xSize", 20).toInt();
     yCubes = settings->value("ySize", 20).toInt();
     zCubes = settings->value("zSize", 20).toInt();
@@ -27,11 +35,11 @@ QSize MatrixWidget::sizeHint() const
 void MatrixWidget::initializeGL()
 {
     glClearColor(0,0,0,0);
-    //glEnable(GL_DEPTH_TEST); 
-    //disabled to fix bad rendering of trasnparent cubes
     
     glEnable( GL_BLEND );
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glMatrixMode(GL_MODELVIEW);
 }
 
 static float maximum(float x, float y, float z) {
@@ -67,7 +75,7 @@ float MatrixWidget::zCoords(int index) {
 bool MatrixWidget::isOn(int x, int y, int z) {
     double extent = yCubes/4.0;
     int yval = round((double)sin(x*3.14/extent)*(double)extent + extent*2);
-    if(y == yval) {
+    if(y == yval /*&& z == zCubes/2*/) {
         return true;
     }
     return false;
@@ -85,7 +93,12 @@ void MatrixWidget::paintGL()
     for (float i = 0; i < xCubes; i++) {
         for (float j = 0; j < yCubes; j++) {
             for (float k = 0; k < zCubes; k++) {
-                drawCube(i,j,k);    
+                if (mode == MODE_POINTS) {
+                    drawPoint(i,j,k);  
+                } else if (mode == MODE_CUBES) {
+                    drawCube(i,j,k);  
+                }
+                
             }
         }
     
@@ -99,49 +112,78 @@ void MatrixWidget::drawCube(int x, int y, int z)
     float dz = zCoords(z);
 
     float alpha;
-    if (isOn(x,y,z)) {
+    bool on = isOn(x,y,z);
+
+    if (on) {
         alpha = 1.0;
     } else {
         alpha = 0.05;
     }
-    
-    glBegin(GL_QUADS);
-    
-    glColor4f(1.0f, 1.0f, 1.0f, alpha);
 
-    float size = ledSize;
-    
-    glVertex3f(size+dx, size+dy, dz);
-    glVertex3f(dx, size+dy, dz);
-    glVertex3f(dx, size+dy, size+dz);
-    glVertex3f(size+dx, size+dy, size+dz);
-    
-    glVertex3f(size+dx, dy, size+dz);
-    glVertex3f(dx, dy, size+dz);
-    glVertex3f(dx, dy, dz);
-    glVertex3f(size+dx, dy, dz);
-    
-    glVertex3f(size+dx, size+dy, size+dz);
-    glVertex3f(dx, size+dy, size+dz);
-    glVertex3f(dx, dy, size+dz);
-    glVertex3f(size+dx, dy, size+dz);
-    
-    glVertex3f(size+dx, dy, dz);
-    glVertex3f(dx, dy, dz);
-    glVertex3f(dx, size+dy, dz);
-    glVertex3f(size+dx, size+dy, dz);
-    
-    glVertex3f(dx, size+dy, size+dz);
-    glVertex3f(dx, size+dy, dz);
-    glVertex3f(dx, dy, dz);
-    glVertex3f(dx, dy, size+dz);
-    
-    glVertex3f(size+dx, size+dy, dz);
-    glVertex3f(size+dx, size+dy, size+dz);
-    glVertex3f(size+dx, dy, size+dz);
-    glVertex3f(size+dx, dy, +dz);
-    
-    glEnd();
+    if (on || DRAW_OFF_LEDS_AS_TRANSLUSCENT) {
+        glBegin(GL_QUADS);
+        
+        glColor4f(1.0f, 1.0f, 1.0f, alpha);
+
+        float size = ledSize;
+        
+        glVertex3f(size+dx, size+dy, dz);
+        glVertex3f(dx, size+dy, dz);
+        glVertex3f(dx, size+dy, size+dz);
+        glVertex3f(size+dx, size+dy, size+dz);
+        
+        glVertex3f(size+dx, dy, size+dz);
+        glVertex3f(dx, dy, size+dz);
+        glVertex3f(dx, dy, dz);
+        glVertex3f(size+dx, dy, dz);
+        
+        glVertex3f(size+dx, size+dy, size+dz);
+        glVertex3f(dx, size+dy, size+dz);
+        glVertex3f(dx, dy, size+dz);
+        glVertex3f(size+dx, dy, size+dz);
+        
+        glVertex3f(size+dx, dy, dz);
+        glVertex3f(dx, dy, dz);
+        glVertex3f(dx, size+dy, dz);
+        glVertex3f(size+dx, size+dy, dz);
+        
+        glVertex3f(dx, size+dy, size+dz);
+        glVertex3f(dx, size+dy, dz);
+        glVertex3f(dx, dy, dz);
+        glVertex3f(dx, dy, size+dz);
+        
+        glVertex3f(size+dx, size+dy, dz);
+        glVertex3f(size+dx, size+dy, size+dz);
+        glVertex3f(size+dx, dy, size+dz);
+        glVertex3f(size+dx, dy, +dz);
+        
+        glEnd();
+    }
+}
+
+void MatrixWidget::drawPoint(int x, int y, int z) 
+{
+    float dx = xCoords(x);
+    float dy = yCoords(y);
+    float dz = zCoords(z);
+
+    float alpha;
+    bool on = isOn(x,y,z);
+
+    if (on) {
+        alpha = 1.0;
+    } else {
+        alpha = 0.05;
+    }
+    if (on || DRAW_OFF_LEDS_AS_TRANSLUSCENT) {
+        glBegin(GL_POINTS);
+        
+        glColor4f(1.0f, 1.0f, 1.0f, alpha);
+        
+        glVertex3f(dx, dy, dz);
+        
+        glEnd();
+    }
 }
 
 static void qNormalizeAngle(int &angle)
@@ -214,24 +256,16 @@ void MatrixWidget::setZSize(int size) {
 
 void MatrixWidget::resizeGL(int w, int h)
 {
-    if(w == 0) w = 1;
-    if(h == 0) h = 1;
-
-    float aspect =(float)w/h;
-
-    glViewport(0, 0, w, h);
+    float aspect =(float)w/ ( h ? h : 1 );
 
     glMatrixMode(GL_PROJECTION);
+
     glLoadIdentity();
+
+    glViewport(0, 0, w, h);
     
-    if (w <= h)
-        glOrtho(-zoom, zoom,-zoom/aspect,zoom/aspect,-(zoom*2),zoom*2);
-    else
-        glOrtho(-(zoom*aspect),zoom*aspect,-zoom,zoom,-(zoom*2),zoom*2);
+    glOrtho(-zoom, zoom,-zoom/aspect,zoom/aspect,-(zoom*2),zoom*2);
 
-
-    //glFrustum( -xCubeSize, xCubeSize, -yCubeSize, yCubeSize, -zCubeSize, zCubeSize );
-    //perspective(45.0, aspect, -10, 20);    
     glMatrixMode(GL_MODELVIEW);
     //glLoadIdentity();
 }
@@ -249,10 +283,10 @@ void MatrixWidget::mouseMoveEvent(QMouseEvent *event)
     if (event->buttons() & Qt::LeftButton) {
         setXRotation(xRot - dy);
         setYRotation(yRot - dx);
-    } else if (event->buttons() & Qt::RightButton) {
+    }/* else if (event->buttons() & Qt::RightButton) {
         setXRotation(xRot - dy);
         setZRotation(zRot - dx);
-    }
+    }*/
     lastPos = event->pos();
 }
 
