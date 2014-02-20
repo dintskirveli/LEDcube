@@ -2,7 +2,7 @@
 #define MATRIXWIDGET_H
 
 #include <QGLWidget>
-#include <QSettings>
+#include <QSettings>:
 
 class MatrixWidget : public QGLWidget
 {
@@ -39,6 +39,7 @@ protected:
     QSize sizeHint() const;
     void calcCubeSize();
     bool isOn(int x, int y, int z);
+    void perspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar);
 
 private:
     int xRot;

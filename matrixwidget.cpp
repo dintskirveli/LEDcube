@@ -223,14 +223,17 @@ void MatrixWidget::resizeGL(int w, int h)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
+    
     if (w <= h)
         glOrtho(-zoom, zoom,-zoom/aspect,zoom/aspect,-(zoom*2),zoom*2);
     else
         glOrtho(-(zoom*aspect),zoom*aspect,-zoom,zoom,-(zoom*2),zoom*2);
-    
+
+
+    //glFrustum( -xCubeSize, xCubeSize, -yCubeSize, yCubeSize, -zCubeSize, zCubeSize );
+    //perspective(45.0, aspect, -10, 20);    
     glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    //glLoadIdentity();
 }
 
 void MatrixWidget::mousePressEvent(QMouseEvent *event)
@@ -251,4 +254,16 @@ void MatrixWidget::mouseMoveEvent(QMouseEvent *event)
         setZRotation(zRot - dx);
     }
     lastPos = event->pos();
+}
+
+void MatrixWidget::perspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
+{
+    GLdouble xmin, xmax, ymin, ymax;
+
+    ymax = zNear * tan( fovy * M_PI / 360.0 );
+    ymin = -ymax;
+    xmin = ymin * aspect;
+    xmax = ymax * aspect;
+
+    glFrustum( xmin, xmax, ymin, ymax, zNear, zFar );
 }
