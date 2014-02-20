@@ -2,13 +2,19 @@
 #define MATRIXWIDGET_H
 
 #include <QGLWidget>
-#include <QSettings>:
+#include <QSettings>
 
+//! LEDMatrix Widget
+/*!
+    Extension of QGLWidget on which the actual led matrix is displayed.
+    
+*/
 class MatrixWidget : public QGLWidget
 {
     Q_OBJECT
 
 public:
+
     MatrixWidget(QWidget *parent = 0);
 
 public slots:

@@ -4,6 +4,10 @@
 
 #include "window.h"
 
+//! Entry point for the app
+/*!
+    Creates the window and shows it.
+*/
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

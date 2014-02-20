@@ -11,4 +11,4 @@ matrixwidget.o
 moc_matrixwidget.cpp
 moc_matrixwidget.o
 LEDcube.app/*
-Doxyfile
+doxygen/

@@ -1,7 +1,7 @@
 #include "matrixwidget.h"
 #include <QtOpenGL>
 #include <cmath>
- 
+
 MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
 {
     settings = new QSettings("groupname", "LEDcube");

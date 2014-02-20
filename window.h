@@ -10,6 +10,11 @@ QT_END_NAMESPACE
 
 class MatrixWidget;
 
+//! The main window of the application
+/*!
+    Is the container for the LEDMatrix widget and the various sliders, spinboxes, etc...
+    
+*/
 class Window : public QMainWindow
 {
     Q_OBJECT
