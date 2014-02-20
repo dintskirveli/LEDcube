@@ -27,7 +27,8 @@ QSize MatrixWidget::sizeHint() const
 void MatrixWidget::initializeGL()
 {
     glClearColor(0,0,0,0);
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST); 
+    //disabled to fix bad rendering of trasnparent cubes
     
     glEnable( GL_BLEND );
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
