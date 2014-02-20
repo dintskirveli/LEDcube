@@ -102,7 +102,7 @@ void MatrixWidget::drawCube(int x, int y, int z)
     if (isOn(x,y,z)) {
         alpha = 1.0;
     } else {
-        alpha = 0.1;
+        alpha = 0.05;
     }
     
     glBegin(GL_QUADS);
