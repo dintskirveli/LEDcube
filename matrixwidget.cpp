@@ -9,11 +9,12 @@ MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
     xRot = yRot = zRot = 0;
     if (mode == MODE_POINTS) {
         ledSize = 0.0f;
+        spacing = 0.5f;
     } else if (mode == MODE_CUBES) {
         ledSize = 0.2f;
+        spacing = settings->value("spacing", 0.5f).toFloat();
     }
-    spacing = settings->value("spacing", 0.5f).toFloat();
-
+    
     DRAW_OFF_LEDS_AS_TRANSLUSCENT = false;
     
     xCubes = settings->value("xSize", 20).toInt();
