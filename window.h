@@ -6,6 +6,7 @@
 QT_BEGIN_NAMESPACE
 class QSlider;
 class QSpinBox;
+class QCheckBox;
 QT_END_NAMESPACE
 
 class MatrixWidget;
@@ -40,6 +41,7 @@ private:
     QSpinBox* xSize;
     QSpinBox* ySize;
     QSpinBox* zSize;
+    QCheckBox* drawOff;
     int drawMode;
 };
 

@@ -1,5 +1,4 @@
 Use perspective instead of orthographic projection
 Doxygen (already WIP)
-add checkbox to decide whether or not to draw "off" LEDs at all
 add checkbox to decide whether to cube shape a cube (so you dont have to change all settings at once)
 use double buffering

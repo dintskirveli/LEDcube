@@ -29,6 +29,7 @@ public slots:
     void setXSize(int size);
     void setYSize(int size);
     void setZSize(int size);
+    void toggleDrawOff(bool draw);
     
 signals:
     void xRotationChanged(int angle);

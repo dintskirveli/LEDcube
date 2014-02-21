@@ -289,6 +289,11 @@ void MatrixWidget::setZSize(int size) {
     updateGL();
 }
 
+void MatrixWidget::toggleDrawOff(bool draw) {
+    DRAW_OFF_LEDS_AS_TRANSLUSCENT = draw;
+    updateGL();
+}
+
 void MatrixWidget::resizeGL(int w, int h)
 {
     float aspect =(float)w/ ( h ? h : 1 );

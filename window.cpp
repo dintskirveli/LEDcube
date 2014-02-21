@@ -32,6 +32,8 @@ Window::Window()
         spacingSlider->setEnabled(false);
     }
 
+    drawOff = new QCheckBox("draw \"Off\" LEDs?");
+
     xSize = createSpinBox();
     ySize = createSpinBox();
     zSize = createSpinBox();
@@ -47,6 +49,8 @@ Window::Window()
     connect(spacingSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setSpacing(int)));
     connect(comboBox, SIGNAL(activated(int)), matrixWidget, SLOT(setMode(int)));
     connect(matrixWidget, SIGNAL(setSpacingSliderEnabled(bool)), this, SLOT(setSpacingSliderEnabled(bool)));
+
+    connect(drawOff, SIGNAL(toggled(bool)), matrixWidget, SLOT(toggleDrawOff(bool)));     
 
     connect(xSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXSize(int)));
     connect(ySize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYSize(int)));   
@@ -79,6 +83,7 @@ Window::Window()
     moreSliders->addLayout(ledSettings);
     moreSliders->addWidget(spacingSlider);
     moreSliders->addWidget(comboBox);
+    moreSliders->addWidget(drawOff);
     mainLayout->addLayout(moreSliders);
     mainLayout->addWidget(zoomSlider);
 
