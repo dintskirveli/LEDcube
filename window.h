@@ -22,6 +22,9 @@ class Window : public QMainWindow
 public:
     Window();
 
+public slots:
+	void setSpacingSliderEnabled(bool enabled);
+
 protected:
     void keyPressEvent(QKeyEvent *event);
 
@@ -33,6 +36,7 @@ private:
     QSlider *ySlider;
     QSlider *zSlider;
     QSlider* zoomSlider;
+    QSlider* spacingSlider;
     QSpinBox* xSize;
     QSpinBox* ySize;
     QSpinBox* zSize;

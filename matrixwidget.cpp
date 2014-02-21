@@ -5,14 +5,14 @@
 MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
 {
     settings = new QSettings("groupname", "LEDcube");
-    mode = MODE_POINTS;
+    mode = settings->value("drawMode", MODE_POINTS).toInt();
     xRot = yRot = zRot = 0;
     if (mode == MODE_POINTS) {
         ledSize = 0.0f;
     } else if (mode == MODE_CUBES) {
         ledSize = 0.2f;
     }
-    spacing = 0.5f;
+    spacing = settings->value("spacing", 0.5f).toFloat();
 
     DRAW_OFF_LEDS_AS_TRANSLUSCENT = false;
     
@@ -20,6 +20,7 @@ MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
     yCubes = settings->value("ySize", 20).toInt();
     zCubes = settings->value("zSize", 20).toInt();
     calcCubeSize();
+    calcZoom();
 }
 
 QSize MatrixWidget::minimumSizeHint() const
@@ -52,12 +53,14 @@ static float maximum(float x, float y, float z) {
     return max;
 }
 
+void MatrixWidget::calcZoom() {
+    zoom = maximum(xCubeSize, yCubeSize, zCubeSize);
+}
+
 void MatrixWidget::calcCubeSize() {
     xCubeSize = (ledSize*xCubes+spacing*(xCubes-1));
     yCubeSize = (ledSize*yCubes+spacing*(yCubes-1));
     zCubeSize = (ledSize*zCubes+spacing*(zCubes-1));
-    
-    zoom = maximum(xCubeSize, yCubeSize, zCubeSize);
 }
 
 float MatrixWidget::xCoords(int index) {
@@ -230,10 +233,39 @@ void MatrixWidget::setZoom(int newZoom) {
     updateGL();
 }
 
+void MatrixWidget::setSpacing(int intspaceing) {
+    spacing = (float)intspaceing / (float)10;
+    settings->setValue("spacing", spacing);
+    calcCubeSize();
+    calcZoom();
+    resizeGL(width(), height());
+    updateGL();
+}
+
+void MatrixWidget::setMode(int cur) {
+    if(cur == 0) {
+        ledSize = 0.2f;
+        spacing = settings->value("spacing", 0.5f).toFloat();
+        mode = MODE_CUBES;
+        emit setSpacingSliderEnabled(true);
+    } else if (cur == 1){
+        ledSize = 0.0f;
+        spacing = 0.5f;
+        mode = MODE_POINTS;
+        emit setSpacingSliderEnabled(false);
+    }
+    settings->setValue("drawMode", mode);
+    calcCubeSize();
+    calcZoom();
+    resizeGL(width(), height());
+    updateGL();
+}
+
 void MatrixWidget::setXSize(int size) {
     xCubes = size;
     settings->setValue("xSize", xCubes);
     calcCubeSize();
+    calcZoom();
     resizeGL(width(), height());
     updateGL();
 }
@@ -242,6 +274,7 @@ void MatrixWidget::setYSize(int size) {
     yCubes = size;
     settings->setValue("ySize", yCubes);
     calcCubeSize();
+    calcZoom();
     resizeGL(width(), height());
     updateGL();
 }
@@ -250,6 +283,7 @@ void MatrixWidget::setZSize(int size) {
     zCubes = size;
     settings->setValue("zSize", zCubes);
     calcCubeSize();
+    calcZoom();
     resizeGL(width(), height());
     updateGL();
 }
@@ -281,12 +315,9 @@ void MatrixWidget::mouseMoveEvent(QMouseEvent *event)
     int dy = event->y() - lastPos.y();
     
     if (event->buttons() & Qt::LeftButton) {
-        setXRotation(xRot - dy);
-        setYRotation(yRot - dx);
-    }/* else if (event->buttons() & Qt::RightButton) {
-        setXRotation(xRot - dy);
-        setZRotation(zRot - dx);
-    }*/
+        setXRotation(xRot + dy);
+        setYRotation(yRot + dx);
+    }
     lastPos = event->pos();
 }
 

@@ -24,6 +24,8 @@ public slots:
     void setYRotation(int angle);
     void setZRotation(int angle);
     void setZoom(int zoom);
+    void setMode(int cur);
+    void setSpacing(int spacing);
     void setXSize(int size);
     void setYSize(int size);
     void setZSize(int size);
@@ -32,6 +34,7 @@ signals:
     void xRotationChanged(int angle);
     void yRotationChanged(int angle);
     void zRotationChanged(int angle);
+    void setSpacingSliderEnabled(bool enabled);
 
 protected:
     void drawCube(int x, int y, int z);
@@ -47,6 +50,7 @@ protected:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
     void calcCubeSize();
+    void calcZoom();
     bool isOn(int x, int y, int z);
     void perspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar);
 

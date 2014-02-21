@@ -13,7 +13,24 @@ Window::Window()
     xSlider = createSlider();
     ySlider = createSlider();
     zSlider = createSlider();
-    zoomSlider = createSlider(-360); //make min = 360
+    zoomSlider = createSlider(-360);
+
+    spacingSlider = new QSlider(Qt::Horizontal);
+    spacingSlider->setRange(0, 20);
+    spacingSlider->setSingleStep(1);
+    spacingSlider->setPageStep(1); 
+    spacingSlider->setTickInterval(1);
+    
+    QComboBox *comboBox = new QComboBox;
+    comboBox->addItem(tr("Cubes"));
+    comboBox->addItem(tr("Points"));
+    if (drawMode == MatrixWidget::MODE_CUBES) {
+        comboBox->setCurrentIndex (0);
+        spacingSlider->setEnabled(true);
+    } else if (drawMode == MatrixWidget::MODE_POINTS) {
+        comboBox->setCurrentIndex (1);
+        spacingSlider->setEnabled(false);
+    }
 
     xSize = createSpinBox();
     ySize = createSpinBox();
@@ -27,6 +44,9 @@ Window::Window()
     connect(matrixWidget, SIGNAL(zRotationChanged(int)), zSlider, SLOT(setValue(int)));
 
     connect(zoomSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZoom(int)));
+    connect(spacingSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setSpacing(int)));
+    connect(comboBox, SIGNAL(activated(int)), matrixWidget, SLOT(setMode(int)));
+    connect(matrixWidget, SIGNAL(setSpacingSliderEnabled(bool)), this, SLOT(setSpacingSliderEnabled(bool)));
 
     connect(xSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXSize(int)));
     connect(ySize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYSize(int)));   
@@ -34,7 +54,9 @@ Window::Window()
 
     QHBoxLayout *mainLayout = new QHBoxLayout;
     mainLayout->addWidget(matrixWidget);
-    
+
+    QVBoxLayout *moreSliders = new QVBoxLayout;
+    QHBoxLayout *ledSettings = new QHBoxLayout;
     QVBoxLayout *xLayout = new QVBoxLayout;
 
     xLayout->addWidget(xSlider);
@@ -50,10 +72,14 @@ Window::Window()
     zLayout->addWidget(zSlider);
     zLayout->addWidget(zSize);
 
-    mainLayout->addLayout(xLayout);
-    mainLayout->addLayout(yLayout);
-    mainLayout->addLayout(zLayout);
+    ledSettings->addLayout(xLayout);
+    ledSettings->addLayout(yLayout);
+    ledSettings->addLayout(zLayout);
 
+    moreSliders->addLayout(ledSettings);
+    moreSliders->addWidget(spacingSlider);
+    moreSliders->addWidget(comboBox);
+    mainLayout->addLayout(moreSliders);
     mainLayout->addWidget(zoomSlider);
 
     QWidget *central = new QWidget();
@@ -69,6 +95,8 @@ Window::Window()
     zSize->setValue(settings->value("zSize", 20).toInt());
 
     zoomSlider->setValue(0);
+    spacingSlider->setValue(settings->value("spacing", .5f).toFloat()*10);
+
     setWindowTitle(tr("LEDcube"));
 }
 
@@ -85,16 +113,14 @@ QSlider *Window::createSlider(int min, int max, int singleStep, int pageStep, in
 
 QSpinBox *Window::createSpinBox()
 {
-    int max;
-    if (drawMode ==  MatrixWidget::MODE_POINTS) {
-        max = 100;
-    } else {
-        max = 50;
-    }
     QSpinBox *spin = new QSpinBox();
-    spin->setRange(0, max);
+    spin->setRange(0, 100);
     spin->setMaximumWidth(50);
     return spin;
+}
+
+void Window::setSpacingSliderEnabled(bool enabled) {
+    spacingSlider->setEnabled(enabled);
 }
 
 void Window::keyPressEvent(QKeyEvent *e)
