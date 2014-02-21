@@ -33,6 +33,7 @@ Window::Window()
     }
 
     drawOff = new QCheckBox("draw \"Off\" LEDs?");
+    isCube = new QCheckBox("Keep dimensions cubic");
 
     xSize = createSpinBox();
     ySize = createSpinBox();
@@ -50,9 +51,11 @@ Window::Window()
     connect(comboBox, SIGNAL(activated(int)), matrixWidget, SLOT(setMode(int)));
     connect(matrixWidget, SIGNAL(setSpacingSliderEnabled(bool)), this, SLOT(setSpacingSliderEnabled(bool)));
 
-    connect(drawOff, SIGNAL(toggled(bool)), matrixWidget, SLOT(toggleDrawOff(bool)));     
+    connect(drawOff, SIGNAL(toggled(bool)), matrixWidget, SLOT(toggleDrawOff(bool)));
+    connect(isCube, SIGNAL(toggled(bool)), this, SLOT(setCubicDimensions(bool)));        
 
     connect(xSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXSize(int)));
+    connect(xSize, SIGNAL(valueChanged(int)), this, SLOT(maybeSetAllDimensions(int)));
     connect(ySize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYSize(int)));   
     connect(zSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZSize(int)));     
 
@@ -84,6 +87,9 @@ Window::Window()
     moreSliders->addWidget(spacingSlider);
     moreSliders->addWidget(comboBox);
     moreSliders->addWidget(drawOff);
+    moreSliders->addWidget(isCube);
+
+    moreSliders->setSizeConstraint(QLayout::SetMinimumSize);
     mainLayout->addLayout(moreSliders);
     mainLayout->addWidget(zoomSlider);
 
@@ -128,10 +134,30 @@ void Window::setSpacingSliderEnabled(bool enabled) {
     spacingSlider->setEnabled(enabled);
 }
 
+void Window::setCubicDimensions(bool cubic) {
+    if (cubic) {
+        int val = xSize->value();
+        ySize->setEnabled(false);
+        zSize->setEnabled(false);
+        ySize->setValue(val);
+        zSize->setValue(val);
+    } else {
+        ySize->setEnabled(true);
+        zSize->setEnabled(true);
+    }
+}
+
 void Window::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Escape)
         close();
     else
         QWidget::keyPressEvent(e);
+}
+
+void Window::maybeSetAllDimensions(int val) {
+    if (isCube->isChecked()) {
+        ySize->setValue(val);
+        zSize->setValue(val);
+    }
 }

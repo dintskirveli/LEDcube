@@ -25,6 +25,8 @@ public:
 
 public slots:
 	void setSpacingSliderEnabled(bool enabled);
+	void setCubicDimensions(bool cubic);
+	void maybeSetAllDimensions(int value);
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -42,6 +44,7 @@ private:
     QSpinBox* ySize;
     QSpinBox* zSize;
     QCheckBox* drawOff;
+    QCheckBox* isCube;
     int drawMode;
 };
 
