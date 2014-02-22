@@ -7,6 +7,7 @@ QT_BEGIN_NAMESPACE
 class QSlider;
 class QSpinBox;
 class QCheckBox;
+class QLabel;
 QT_END_NAMESPACE
 
 class MatrixWidget;
@@ -46,6 +47,15 @@ private:
     QCheckBox* drawOff;
     QCheckBox* isCube;
     int drawMode;
+    
+    QLabel *xSliderLabel;
+    QLabel *ySliderLabel;
+    QLabel *zSliderLabel;
+    QLabel *zoomLabel;
+    QLabel *xSizeLabel;
+    QLabel *ySizeLabel;
+    QLabel *zSizeLabel;
+    QLabel *spaceLabel;
 };
 
 #endif

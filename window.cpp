@@ -16,12 +16,49 @@ Window::Window()
     zSlider = createSlider();
     zoomSlider = createSlider(-360);
 
+    xSize = createSpinBox();
+    ySize = createSpinBox();
+    zSize = createSpinBox();
+
+    xSliderLabel = new QLabel(tr("X-axis"));
+    xSliderLabel->setBuddy(xSlider);
+    xSliderLabel->setAlignment(Qt::AlignCenter);
+    
+    ySliderLabel = new QLabel(tr("Y-axis"));
+    ySliderLabel->setBuddy(ySlider);
+    ySliderLabel->setAlignment(Qt::AlignCenter);
+    
+    zSliderLabel = new QLabel(tr("Z-axis"));
+    zSliderLabel->setBuddy(zSlider);
+    zSliderLabel->setAlignment(Qt::AlignCenter);
+    
+    zoomLabel = new QLabel(tr("Zoom"));
+    zoomLabel->setBuddy(zoomSlider);
+    zoomLabel->setAlignment(Qt::AlignCenter);
+
+    xSizeLabel = new QLabel(tr("x-Size"));
+    xSizeLabel->setBuddy(xSize);
+    xSizeLabel ->setAlignment(Qt::AlignCenter);
+    
+    ySizeLabel = new QLabel(tr("y-Size"));
+    ySizeLabel->setBuddy(ySize);
+    ySizeLabel ->setAlignment(Qt::AlignCenter);
+    
+    zSizeLabel = new QLabel(tr("z-Size"));
+    zSizeLabel->setBuddy(zSize);
+    zSizeLabel ->setAlignment(Qt::AlignCenter);
+    
     spacingSlider = new QSlider(Qt::Horizontal);
     spacingSlider->setRange(0, 20);
     spacingSlider->setSingleStep(1);
     spacingSlider->setPageStep(1); 
     spacingSlider->setTickInterval(1);
-    
+
+    spaceLabel = new QLabel(tr("Cube Size"));
+    spaceLabel->setBuddy(spacingSlider);
+    spaceLabel->setAlignment(Qt::AlignCenter);
+
+
     QComboBox *comboBox = new QComboBox;
     comboBox->addItem(tr("Cubes"));
     comboBox->addItem(tr("Points"));
@@ -35,10 +72,6 @@ Window::Window()
 
     drawOff = new QCheckBox("draw \"Off\" LEDs?");
     isCube = new QCheckBox("Keep dimensions cubic");
-
-    xSize = createSpinBox();
-    ySize = createSpinBox();
-    zSize = createSpinBox();
 
     connect(xSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXRotation(int)));
     connect(matrixWidget, SIGNAL(xRotationChanged(int)), xSlider, SLOT(setValue(int)));
@@ -63,20 +96,35 @@ Window::Window()
     QVBoxLayout *settingsLayout = new QVBoxLayout;
 
     QHBoxLayout *sliders = new QHBoxLayout;
+    QHBoxLayout *sliderlabels = new QHBoxLayout;
 
     QHBoxLayout *spinBoxes = new QHBoxLayout;
-    spinBoxes->addWidget(xSize);
-    spinBoxes->addWidget(ySize);
-    spinBoxes->addWidget(zSize);
+    QHBoxLayout *spinBoxesLabels = new QHBoxLayout;
+
+    sliderlabels->addWidget(xSliderLabel);
+    sliderlabels->addWidget(ySliderLabel);
+    sliderlabels->addWidget(zSliderLabel);
+    sliderlabels->addWidget(zoomLabel);
+
+    spinBoxesLabels->addWidget(xSizeLabel);
+    spinBoxesLabels->addWidget(ySizeLabel);
+    spinBoxesLabels->addWidget(zSizeLabel);
 
     sliders->addWidget(xSlider);
     sliders->addWidget(ySlider);
     sliders->addWidget(zSlider);
     sliders->addWidget(zoomSlider);
+    
+    spinBoxes->addWidget(xSize);
+    spinBoxes->addWidget(ySize);
+    spinBoxes->addWidget(zSize);
 
+    settingsLayout->addLayout(sliderlabels);
     settingsLayout->addLayout(sliders);
     settingsLayout->addLayout(spinBoxes);
+    settingsLayout->addLayout(spinBoxesLabels);
     settingsLayout->addWidget(spacingSlider);
+    settingsLayout->addWidget(spaceLabel);
     settingsLayout->addWidget(comboBox);
     settingsLayout->addWidget(drawOff);
     settingsLayout->addWidget(isCube);
