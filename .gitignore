@@ -12,3 +12,4 @@ moc_matrixwidget.cpp
 moc_matrixwidget.o
 LEDcube.app/*
 doxygen/
+.DS_Store

@@ -6,6 +6,7 @@
 Window::Window()
 {
     matrixWidget = new MatrixWidget;
+    matrixWidget->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     QSettings *settings = new QSettings("groupname", "LEDcube");
 
     drawMode = settings->value("drawMode", MatrixWidget::MODE_POINTS).toInt();
@@ -59,39 +60,33 @@ Window::Window()
     connect(ySize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYSize(int)));   
     connect(zSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZSize(int)));     
 
+    QVBoxLayout *settingsLayout = new QVBoxLayout;
+
+    QHBoxLayout *sliders = new QHBoxLayout;
+
+    QHBoxLayout *spinBoxes = new QHBoxLayout;
+    spinBoxes->addWidget(xSize);
+    spinBoxes->addWidget(ySize);
+    spinBoxes->addWidget(zSize);
+
+    sliders->addWidget(xSlider);
+    sliders->addWidget(ySlider);
+    sliders->addWidget(zSlider);
+    sliders->addWidget(zoomSlider);
+
+    settingsLayout->addLayout(sliders);
+    settingsLayout->addLayout(spinBoxes);
+    settingsLayout->addWidget(spacingSlider);
+    settingsLayout->addWidget(comboBox);
+    settingsLayout->addWidget(drawOff);
+    settingsLayout->addWidget(isCube);
+    
     QHBoxLayout *mainLayout = new QHBoxLayout;
+    QWidget *settingsWidget = new QWidget();
+    settingsWidget->setLayout(settingsLayout);
+    settingsWidget->setMaximumWidth(200);
     mainLayout->addWidget(matrixWidget);
-
-    QVBoxLayout *moreSliders = new QVBoxLayout;
-    QHBoxLayout *ledSettings = new QHBoxLayout;
-    QVBoxLayout *xLayout = new QVBoxLayout;
-
-    xLayout->addWidget(xSlider);
-    xLayout->addWidget(xSize);
-
-    QVBoxLayout *yLayout = new QVBoxLayout;
-
-    yLayout->addWidget(ySlider);
-    yLayout->addWidget(ySize);
-
-    QVBoxLayout *zLayout = new QVBoxLayout;
-
-    zLayout->addWidget(zSlider);
-    zLayout->addWidget(zSize);
-
-    ledSettings->addLayout(xLayout);
-    ledSettings->addLayout(yLayout);
-    ledSettings->addLayout(zLayout);
-
-    moreSliders->addLayout(ledSettings);
-    moreSliders->addWidget(spacingSlider);
-    moreSliders->addWidget(comboBox);
-    moreSliders->addWidget(drawOff);
-    moreSliders->addWidget(isCube);
-
-    moreSliders->setSizeConstraint(QLayout::SetMinimumSize);
-    mainLayout->addLayout(moreSliders);
-    mainLayout->addWidget(zoomSlider);
+    mainLayout->addWidget(settingsWidget);
 
     QWidget *central = new QWidget();
     central->setLayout(mainLayout);
@@ -126,7 +121,6 @@ QSpinBox *Window::createSpinBox()
 {
     QSpinBox *spin = new QSpinBox();
     spin->setRange(0, 100);
-    spin->setMaximumWidth(50);
     return spin;
 }
 

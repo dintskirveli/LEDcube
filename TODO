@@ -2,3 +2,4 @@ Use perspective instead of orthographic projection
 Doxygen (already WIP)
 use double buffering
 label the various widgets
+change point size
