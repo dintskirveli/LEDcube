@@ -13,3 +13,5 @@ moc_matrixwidget.o
 LEDcube.app/*
 doxygen/
 .DS_Store
+Info.plist
+LEDcube.xcodeproj/
