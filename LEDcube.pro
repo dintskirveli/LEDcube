@@ -6,6 +6,8 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += .
+INCLUDEPATH += /Users/dintskirveli/libfreenect/include
+LIBS += /Users/dintskirveli/libfreenect/build/lib/libfreenect.dylib 
 
 # Input
 HEADERS += matrixwidget.h window.h
