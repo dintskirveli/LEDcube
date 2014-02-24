@@ -7,7 +7,7 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 INCLUDEPATH += /usr/include/libfreenect/
-LIBS += /usr/lib/libfreenect.dylib 
+LIBS += $$(HOME)/libfreenect/build/lib/libfreenect.dylib 
 
 # Input
 HEADERS += matrixwidget.h window.h
