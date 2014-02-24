@@ -3,9 +3,9 @@
 #include "matrixwidget.h"
 #include "window.h"
 
-Window::Window()
+Window::Window(freenect_device *dev, freenect_context *ctx)
 {
-    matrixWidget = new MatrixWidget;
+    matrixWidget = new MatrixWidget(dev, ctx);
     matrixWidget->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     QSettings *settings = new QSettings("groupname", "LEDcube");
 

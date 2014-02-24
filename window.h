@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "libfreenect.h"
+
 QT_BEGIN_NAMESPACE
 class QSlider;
 class QSpinBox;
@@ -22,7 +24,7 @@ class Window : public QMainWindow
     Q_OBJECT
 
 public:
-    Window();
+    Window(freenect_device *dev = 0, freenect_context *ctx = 0);
 
 public slots:
 	void setSpacingSliderEnabled(bool enabled);

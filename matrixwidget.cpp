@@ -2,7 +2,7 @@
 #include <QtOpenGL>
 #include <cmath>
 
-MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
+MatrixWidget::MatrixWidget(freenect_device *dev, freenect_context *ctx) : QGLWidget()
 {
     settings = new QSettings("groupname", "LEDcube");
     mode = settings->value("drawMode", MODE_POINTS).toInt();
@@ -22,6 +22,14 @@ MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
     zCubes = settings->value("zSize", 20).toInt();
     calcCubeSize();
     calcZoom();
+
+    if (dev != NULL && ctx != NULL) {
+        printf("Device found!\n");
+        data_source = SOURCE_KINECT;
+    } else {
+        printf("No device found\n");
+        data_source = SOURCE_MATH;
+    }
 }
 
 QSize MatrixWidget::minimumSizeHint() const
@@ -77,10 +85,15 @@ float MatrixWidget::zCoords(int index) {
 }
 
 bool MatrixWidget::isOn(int x, int y, int z) {
-    double extent = yCubes/4.0;
-    int yval = round((double)sin(x*3.14/extent)*(double)extent + extent*2);
-    if(y == yval /*&& z == zCubes/2*/) {
-        return true;
+    if (data_source == SOURCE_MATH) {
+        double extent = yCubes/4.0;
+        int yval = round((double)sin(x*3.14/extent)*(double)extent + extent*2);
+        if(y == yval /*&& z == zCubes/2*/) {
+            return true;
+        }
+        return false;
+    } else if (data_source == SOURCE_KINECT) {
+        return false;
     }
     return false;
 }

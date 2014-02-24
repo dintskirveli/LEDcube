@@ -4,6 +4,8 @@
 #include <QGLWidget>
 #include <QSettings>
 
+#include "libfreenect.h"
+
 //! LEDMatrix Widget
 /*!
     Extension of QGLWidget on which the actual led matrix is displayed.
@@ -14,8 +16,9 @@ class MatrixWidget : public QGLWidget
     Q_OBJECT
 
 public:
-    MatrixWidget(QWidget *parent = 0);
+    MatrixWidget(freenect_device *dev = 0, freenect_context *ctx = 0);
     enum { MODE_CUBES, MODE_POINTS };
+    enum { SOURCE_MATH, SOURCE_KINECT };
     //decides whether or not to draw the leds that are off
     bool DRAW_OFF_LEDS_AS_TRANSLUSCENT;
 
@@ -71,6 +74,9 @@ private:
     float zCubeSize;
     float zoom;
     QSettings * settings;
+    freenect_context *f_ctx;
+    freenect_device *f_dev;
+    int data_source;
 };
 
 #endif
