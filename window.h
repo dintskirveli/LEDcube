@@ -2,7 +2,7 @@
 #define WINDOW_H
 
 #include <QMainWindow>
-
+#include <stdio.h>
 #include "libfreenect.h"
 
 QT_BEGIN_NAMESPACE
