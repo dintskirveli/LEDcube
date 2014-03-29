@@ -7,6 +7,7 @@ save checkbox settings to QSettings
 when rotating the cube far, the direction of rotation gets inverted. fix this.
 save rotation settings to cube settings 
 add reset rotation button (set xRot, yRot, and zRot to 0)
+add outline when cubes are off
 
 assignment (2/24/14):
 -add stuff to groupboxes (resolution, LED color, transforms, )

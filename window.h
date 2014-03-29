@@ -1,13 +1,16 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <QtGui>
 #include <QMainWindow>
+#include "matrixwidget.h"
 
 QT_BEGIN_NAMESPACE
 class QSlider;
 class QSpinBox;
 class QCheckBox;
 class QLabel;
+class QComboBox;
 QT_END_NAMESPACE
 
 class MatrixWidget;
@@ -31,6 +34,7 @@ public slots:
 
 protected:
     void keyPressEvent(QKeyEvent *event);
+    void makeConnections();
 
 private:
     QSlider *createSlider(int min = 0, int max = 360, int singleStep = 1, int pageStep = 20, int tickInterval = 20);
@@ -41,11 +45,13 @@ private:
     QSlider *zSlider;
     QSlider* zoomSlider;
     QSlider* spacingSlider;
+    QSlider* transparencySlider;
     QSpinBox* xSize;
     QSpinBox* ySize;
     QSpinBox* zSize;
     QCheckBox* drawOff;
     QCheckBox* isCube;
+    QComboBox *comboBox;
     int drawMode;
     
     QLabel *xSliderLabel;

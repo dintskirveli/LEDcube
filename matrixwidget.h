@@ -3,6 +3,8 @@
 
 #include <QGLWidget>
 #include <QSettings>
+#include <ctime>
+#include <QWheelEvent>
 
 //! LEDMatrix Widget
 /*!
@@ -26,6 +28,7 @@ public slots:
     void setZoom(int zoom);
     void setMode(int cur);
     void setSpacing(int spacing);
+    void setTransparency(int percent);
     void setXSize(int size);
     void setYSize(int size);
     void setZSize(int size);
@@ -36,32 +39,32 @@ signals:
     void yRotationChanged(int angle);
     void zRotationChanged(int angle);
     void setSpacingSliderEnabled(bool enabled);
+    void zoomChanged(int rawZoom);
 
 protected:
-    void drawCube(int x, int y, int z);
-    void drawPoint(int x, int y, int z); 
+    void drawCube();
+    void drawPoint(); 
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
-    float xCoords(int index);
-    float yCoords(int index);
-    float zCoords(int index);
-    QSize minimumSizeHint() const;
+    void wheelEvent(QWheelEvent* event);
     QSize sizeHint() const;
     void calcCubeSize();
-    void calcZoom();
-    bool isOn(int x, int y, int z);
+    float delta();
+    bool isOn(int x, int y, int z, int t);
     void perspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar);
 
 private:
+    int rawZoom;
     int mode;
     int xRot;
     int yRot;
     int zRot;
     QPoint lastPos;
     float spacing;
+    float transparency;
     int xCubes;
     int yCubes;
     int zCubes;
@@ -69,6 +72,7 @@ private:
     float xCubeSize;
     float yCubeSize;
     float zCubeSize;
+    float maxCube;
     float zoom;
     QSettings * settings;
 };
