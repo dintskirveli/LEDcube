@@ -16,3 +16,4 @@ doxygen/
 Info.plist
 LEDcube.xcodeproj/
 build.sh
+openSourceInSublime.sh

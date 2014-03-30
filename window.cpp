@@ -1,6 +1,5 @@
-#include <QtGui>
 
-#include "matrixwidget.h"
+
 #include "window.h"
 
 Window::Window(freenect_device *dev, freenect_context *ctx)
@@ -14,7 +13,7 @@ Window::Window(freenect_device *dev, freenect_context *ctx)
     xSlider = createSlider();
     ySlider = createSlider();
     zSlider = createSlider();
-    zoomSlider = createSlider(-360);
+    zoomSlider = createSlider(-100, 100);
 
     xSize = createSpinBox();
     ySize = createSpinBox();
@@ -47,9 +46,15 @@ Window::Window(freenect_device *dev, freenect_context *ctx)
     zSizeLabel = new QLabel(tr("z-Size"));
     zSizeLabel->setBuddy(zSize);
     zSizeLabel ->setAlignment(Qt::AlignCenter);
+
+    transparencySlider = new QSlider(Qt::Horizontal);
+    transparencySlider->setRange(0, 100);
+    transparencySlider->setSingleStep(1);
+    transparencySlider->setPageStep(1); 
+    transparencySlider->setTickInterval(1);
     
     spacingSlider = new QSlider(Qt::Horizontal);
-    spacingSlider->setRange(0, 20);
+    spacingSlider->setRange(1, 20);
     spacingSlider->setSingleStep(1);
     spacingSlider->setPageStep(1); 
     spacingSlider->setTickInterval(1);
@@ -59,39 +64,21 @@ Window::Window(freenect_device *dev, freenect_context *ctx)
     spaceLabel->setAlignment(Qt::AlignCenter);
 
 
-    QComboBox *comboBox = new QComboBox;
+    comboBox = new QComboBox;
     comboBox->addItem(tr("Cubes"));
     comboBox->addItem(tr("Points"));
     if (drawMode == MatrixWidget::MODE_CUBES) {
         comboBox->setCurrentIndex (0);
-        spacingSlider->setEnabled(true);
+        //spacingSlider->setEnabled(true);
     } else if (drawMode == MatrixWidget::MODE_POINTS) {
         comboBox->setCurrentIndex (1);
-        spacingSlider->setEnabled(false);
+        //spacingSlider->setEnabled(false);
     }
 
     drawOff = new QCheckBox("draw \"Off\" LEDs?");
     isCube = new QCheckBox("Keep dimensions cubic");
 
-    connect(xSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXRotation(int)));
-    connect(matrixWidget, SIGNAL(xRotationChanged(int)), xSlider, SLOT(setValue(int)));
-    connect(ySlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYRotation(int)));
-    connect(matrixWidget, SIGNAL(yRotationChanged(int)), ySlider, SLOT(setValue(int)));
-    connect(zSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZRotation(int)));
-    connect(matrixWidget, SIGNAL(zRotationChanged(int)), zSlider, SLOT(setValue(int)));
-
-    connect(zoomSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZoom(int)));
-    connect(spacingSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setSpacing(int)));
-    connect(comboBox, SIGNAL(activated(int)), matrixWidget, SLOT(setMode(int)));
-    connect(matrixWidget, SIGNAL(setSpacingSliderEnabled(bool)), this, SLOT(setSpacingSliderEnabled(bool)));
-
-    connect(drawOff, SIGNAL(toggled(bool)), matrixWidget, SLOT(toggleDrawOff(bool)));
-    connect(isCube, SIGNAL(toggled(bool)), this, SLOT(setCubicDimensions(bool)));        
-
-    connect(xSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXSize(int)));
-    connect(xSize, SIGNAL(valueChanged(int)), this, SLOT(maybeSetAllDimensions(int)));
-    connect(ySize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYSize(int)));   
-    connect(zSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZSize(int)));     
+ 
 
     QVBoxLayout *settingsLayout = new QVBoxLayout;
 
@@ -118,16 +105,19 @@ Window::Window(freenect_device *dev, freenect_context *ctx)
     spinBoxes->addWidget(xSize);
     spinBoxes->addWidget(ySize);
     spinBoxes->addWidget(zSize);
-
-    settingsLayout->addLayout(sliderlabels);
-    settingsLayout->addLayout(sliders);
-    settingsLayout->addLayout(spinBoxes);
-    settingsLayout->addLayout(spinBoxesLabels);
-    settingsLayout->addWidget(spacingSlider);
-    settingsLayout->addWidget(spaceLabel);
-    settingsLayout->addWidget(comboBox);
-    settingsLayout->addWidget(drawOff);
-    settingsLayout->addWidget(isCube);
+    
+    {
+        settingsLayout->addLayout(sliderlabels);
+        settingsLayout->addLayout(sliders);
+        settingsLayout->addLayout(spinBoxes);
+        settingsLayout->addLayout(spinBoxesLabels);
+        settingsLayout->addWidget(transparencySlider);
+        settingsLayout->addWidget(spacingSlider);
+        settingsLayout->addWidget(spaceLabel);
+        settingsLayout->addWidget(comboBox);
+        settingsLayout->addWidget(drawOff);
+        settingsLayout->addWidget(isCube);
+    }
     
     QHBoxLayout *mainLayout = new QHBoxLayout;
     QWidget *settingsWidget = new QWidget();
@@ -150,8 +140,11 @@ Window::Window(freenect_device *dev, freenect_context *ctx)
 
     zoomSlider->setValue(0);
     spacingSlider->setValue(settings->value("spacing", .5f).toFloat()*10);
+    transparencySlider->setValue(5);
 
     setWindowTitle(tr("LEDcube"));
+
+    makeConnections();
 }
 
 QSlider *Window::createSlider(int min, int max, int singleStep, int pageStep, int tickInterval)
@@ -202,4 +195,28 @@ void Window::maybeSetAllDimensions(int val) {
         ySize->setValue(val);
         zSize->setValue(val);
     }
+}
+
+void Window::makeConnections() {
+    connect(xSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXRotation(int)));
+    connect(matrixWidget, SIGNAL(xRotationChanged(int)), xSlider, SLOT(setValue(int)));
+    connect(ySlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYRotation(int)));
+    connect(matrixWidget, SIGNAL(yRotationChanged(int)), ySlider, SLOT(setValue(int)));
+    connect(zSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZRotation(int)));
+    connect(matrixWidget, SIGNAL(zRotationChanged(int)), zSlider, SLOT(setValue(int)));
+
+    connect(zoomSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZoom(int)));
+    connect(matrixWidget, SIGNAL(zoomChanged(int)), zoomSlider, SLOT(setValue(int)));
+    connect(spacingSlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setSpacing(int)));
+    connect(transparencySlider, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setTransparency(int)));
+    connect(comboBox, SIGNAL(activated(int)), matrixWidget, SLOT(setMode(int)));
+    //connect(matrixWidget, SIGNAL(setSpacingSliderEnabled(bool)), this, SLOT(setSpacingSliderEnabled(bool)));
+
+    connect(drawOff, SIGNAL(toggled(bool)), matrixWidget, SLOT(toggleDrawOff(bool)));
+    connect(isCube, SIGNAL(toggled(bool)), this, SLOT(setCubicDimensions(bool)));        
+
+    connect(xSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setXSize(int)));
+    connect(xSize, SIGNAL(valueChanged(int)), this, SLOT(maybeSetAllDimensions(int)));
+    connect(ySize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setYSize(int)));   
+    connect(zSize, SIGNAL(valueChanged(int)), matrixWidget, SLOT(setZSize(int)));    
 }
