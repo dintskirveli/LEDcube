@@ -11,6 +11,12 @@
     Extension of QGLWidget on which the actual led matrix is displayed.
     
 */
+
+struct Vector3
+{
+    float x, y, z;
+};
+
 class MatrixWidget : public QGLWidget
 {
     Q_OBJECT
@@ -33,6 +39,10 @@ public slots:
     void setYSize(int size);
     void setZSize(int size);
     void toggleDrawOff(bool draw);
+
+    void setNoAnimation     (bool);
+    void setWaveAnimation   (bool);
+    void setFaceAnimation   (bool);
     
 signals:
     void xRotationChanged(int angle);
@@ -75,6 +85,10 @@ private:
     float maxCube;
     float zoom;
     QSettings * settings;
+    std::vector<Vector3>* Vertices = new std::vector<Vector3>;
+    bool faceAnimation;
+    bool waveAnimation;
+    bool noAnimation;
 };
 
 #endif

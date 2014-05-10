@@ -24,6 +24,10 @@ MatrixWidget::MatrixWidget(QWidget *parent) : QGLWidget(parent)
     setYRotation(45);
     setZRotation(0);
 
+    faceAnimation = false;
+    waveAnimation = false;
+    noAnimation = true;
+
     // set up timer to call updateGL() fps times a second
     // if I recall correctly updateGL() should be a no-op
     // if the current call to paintGL is still running, so 
@@ -85,12 +89,23 @@ void MatrixWidget::calcCubeSize() {
 
 bool MatrixWidget::isOn(int x, int y, int z, int t) {
     if (false) return true;
-    if (xCubes == 1 && yCubes == 1 && zCubes == 1) {
-        return true;
+
+    if (waveAnimation) {
+        if (xCubes == 1 && yCubes == 1 && zCubes == 1) {
+            return true;
+        }
+        if(y == round(sin(z/2 + t/100)*2)+ round(sin(x/2 /*- t/100*/)*2) +yCubes/2) {
+            return true;
+        }
+    } else if (faceAnimation) {
+        for (std::vector<Vector3>::iterator it = Vertices->begin() ; it != Vertices->end(); ++it)
+        {
+            Vector3 a = *it;
+            if (a.x == x && a.y == y && a.z == z)
+                return true;
+        }
     }
-    if(y == round(sin(z/2 + t/100)*2)+ round(sin(x/2 /*- t/100*/)*2) +yCubes/2) {
-        return true;
-    }
+
     return false;
 }
 
@@ -128,7 +143,12 @@ void MatrixWidget::paintGL()
                     i*delta() - xCubeSize/2,
                     j*delta() - yCubeSize/2,
                     k*delta() - zCubeSize/2);
-                on = isOn(i,j,k,t);
+                if (noAnimation) {
+                    on = true;
+                } else if (waveAnimation || faceAnimation) { 
+                    on = isOn(i,j,k,t);
+                }
+
                 if (on || DRAW_OFF_LEDS_AS_TRANSLUSCENT) {
                     glColor4f(1.0f, 1.0f, 1.0f, on ? 1.0 : transparency);
                     if (mode == MODE_POINTS && (on || transparency)) {
@@ -340,4 +360,82 @@ void MatrixWidget::mouseMoveEvent(QMouseEvent *event)
         setYRotation(yRot + dx);
     }
     lastPos = event->pos();
+}
+
+void MatrixWidget::setNoAnimation (bool set) {
+    noAnimation = true;
+    waveAnimation = false;
+    faceAnimation = false;
+}
+
+void MatrixWidget::setWaveAnimation (bool set) {
+    noAnimation = false;
+    waveAnimation = true;
+    faceAnimation = false;
+}
+
+void MatrixWidget::setFaceAnimation (bool set) {
+    noAnimation = false;
+    waveAnimation = false;
+    faceAnimation = true;
+
+    Vertices = new std::vector<Vector3>;
+
+    QString file = QFileDialog::getOpenFileName(
+        this,
+        tr("Open XYZ File"),
+        tr("XYZ file (.xyz)")
+        );
+
+    if(!file.isEmpty()) 
+    {
+        QFile sfile(file);
+        if(sfile.open(QFile::ReadOnly))
+        {
+            QTextStream in (&sfile);
+            while (!in.atEnd())
+            {
+                QString line = in.readLine();
+                QByteArray ba = line.toLocal8Bit();
+                const char* str = ba.data();
+                Vector3 v;
+                v.x = strtof(str, (char**)&str);
+                v.y = strtof(str, (char**)&str);
+                v.z = strtof(str, (char**)&str);
+                Vertices->push_back(v);
+            }
+            sfile.close();
+        }
+    }
+
+    float xMax = 0.0;
+    float yMax = 0.0;
+    float zMax = 0.0;
+    float xMin = 0.0;
+    float yMin = 0.0;
+    float zMin = 0.0;
+
+    float xnormmax = xCubes;
+    float xnormmin = 1;
+    float ynormmax = yCubes;
+    float ynormmin = 1;
+    float znormmax = zCubes;
+    float znormmin = 1;
+
+    for (std::vector<Vector3>::iterator it = Vertices->begin() ; it != Vertices->end(); ++it){
+        xMax = std::max(xMax, it->x);     
+        yMax = std::max(yMax, it->y);     
+        zMax = std::max(zMax, it->z);
+        xMin = std::min(xMin, it->x);     
+        yMin = std::min(yMin, it->y);     
+        zMin = std::min(zMin, it->z); 
+    }
+
+    for (std::vector<Vector3>::iterator it = Vertices->begin() ; it != Vertices->end(); ++it)
+    {
+        it->x =  floor( xnormmin + ((it->x - xMin) * (xnormmax - xnormmin))/(xMax - xMin) );
+        it->y =  floor( ynormmin + ((it->y - yMin) * (ynormmax - ynormmin))/(yMax - yMin) );
+        it->z =  floor( znormmin + ((it->z - zMin) * (znormmax - znormmin))/(zMax - zMin) );
+    }
+
 }

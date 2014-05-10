@@ -40,15 +40,11 @@ private:
     QSlider *createSlider(int min = 0, int max = 360, int singleStep = 1, int pageStep = 20, int tickInterval = 20);
     QSpinBox* createSpinBox();
     MatrixWidget *matrixWidget;
-    QSlider *xSlider;
-    QSlider *ySlider;
-    QSlider *zSlider;
+
     QSlider* zoomSlider;
     QSlider* spacingSlider;
     QSlider* transparencySlider;
-    QSpinBox* xSize;
-    QSpinBox* ySize;
-    QSpinBox* zSize;
+
     QCheckBox* drawOff;
     QCheckBox* isCube;
     QComboBox *comboBox;
@@ -62,6 +58,24 @@ private:
     QLabel *ySizeLabel;
     QLabel *zSizeLabel;
     QLabel *spaceLabel;
+
+    QGroupBox* Transforms;
+    QGroupBox* Resolution;
+
+    QSpinBox*   xSpinbox;
+    QSpinBox*   ySpinbox;
+    QSpinBox*   zSpinbox;
+
+    QLabel* xLabel;
+    QLabel* yLabel;
+    QLabel* zLabel;
+    QLabel* Status;
+    QCheckBox* onStautus;
+    QSpacerItem *Spacer;
+
+    QVBoxLayout* resolutionLayout;
+    QVBoxLayout*  LEDStatus;
+    QHBoxLayout* sizeLayout;
 };
 
 #endif
