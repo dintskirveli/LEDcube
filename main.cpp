@@ -97,7 +97,7 @@ int16_t t_gamma[2048];
         		//printf("%d\t", depth[j*(480/x) + 640*i] < 900 ? 1 : 0);
                 zd = depth[j*(480/y) + 640*i*(640/x)];
         		//printf("%d\t", zd);
-                onCoords.insert(boost::make_tuple(j,i,zd*50/3500));
+                onCoords.insert(boost::make_tuple(j,i,zd*z/3500));
 
         	}
         	//printf("\n");
