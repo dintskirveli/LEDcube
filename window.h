@@ -1,3 +1,14 @@
+/*  -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+
+ > Window Class for the Cube Simulation.
+ > Copyright (C) 2014 by Daniel Intskirveli, Gurpreet Singh, Christopher Zhang.
+
+ > window.h - Displays Widgets that will manipulate Cubes using QT.
+ 
+ > Written by: Daniel Intskirveli, Gurpreet Singh, Christopher Zhang, 2014.
+
+  -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ */
+
 #ifndef WINDOW_H
 #define WINDOW_H
 

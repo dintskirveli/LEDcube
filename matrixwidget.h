@@ -1,3 +1,17 @@
+ /*  -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+
+ > MatrixWidget class header for the drawing a 3d cube QGLWidget object to diplay in the
+ > main window with settings. The cube object can be manupilated using
+ > the settings using the connects function from the QObject class. 
+
+ > Copyright (C) 2014 by Daniel Intskirveli, Gurpreet Singh, Christopher Zhang.
+
+ > matrixwidget.h - draws a 3d cube in the left of the settings.
+ 
+ > Written by: Daniel Intskirveli, Gurpreet Singh, Christopher Zhang, 2014.
+
+  -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ */
+
 #ifndef MATRIXWIDGET_H
 #define MATRIXWIDGET_H
 
@@ -12,8 +26,7 @@
     
 */
 
-struct Vector3
-{
+struct Vector3 {
     float x, y, z;
 };
 
@@ -23,9 +36,8 @@ class MatrixWidget : public QGLWidget
 
 public:
     MatrixWidget(QWidget *parent = 0);
-    enum { MODE_CUBES, MODE_POINTS };
-    //decides whether or not to draw the leds that are off
-    bool DRAW_OFF_LEDS_AS_TRANSLUSCENT;
+    enum { MODE_CUBES, MODE_POINTS };                       // able to change the mode from cubes to points or vice versa
+    bool DRAW_OFF_LEDS_AS_TRANSLUSCENT;                     // decides whether or not to draw the leds that are off
 
 public slots:
     void setXRotation(int angle);
